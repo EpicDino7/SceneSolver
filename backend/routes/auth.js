@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    console.log("Register request body:", req.body); // Add logging
+    console.log("Register request body:", req.body);
     const { email, password, displayName } = req.body;
 
     if (!validateEmail(email)) {
@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("Login request body:", req.body); // Add logging
+    console.log("Login request body:", req.body);
     const { email, password } = req.body;
 
     if (!email || !password) {

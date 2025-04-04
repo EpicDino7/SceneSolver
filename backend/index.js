@@ -24,7 +24,6 @@ app.use(
   })
 );
 
-// Add request logging middleware
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   console.log("Headers:", req.headers);
