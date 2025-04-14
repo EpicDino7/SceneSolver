@@ -3,13 +3,15 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import googleIcon from "./assets/google_img.png";
 
-const images = [
-  "src/assets/crimeSceneImg.jpg",
-  "src/assets/cs1.jpg",
-  "src/assets/cs2.jpg",
-  "src/assets/cs3.jpg",
-];
+// Import images correctly
+import crimeSceneImg from "./assets/crimeSceneImg.jpg";
+import cs1 from "./assets/cs1.jpg";
+import cs2 from "./assets/cs2.jpg";
+import cs3 from "./assets/cs3.jpg";
+
+const images = [crimeSceneImg, cs1, cs2, cs3];
 
 export default function Login() {
   const auth = useAuth();
@@ -18,6 +20,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [index, setIndex] = useState(0);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
+  const navigate = useNavigate(); // Hook for navigation
 
   // Auto-change background every 5 seconds
   useEffect(() => {
@@ -30,14 +34,21 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true); // Start loading state
 
     const result = await login({ email, password });
-    if (!result.success) {
+    setLoading(false); // End loading state
+
+    if (result.success) {
+      // Redirect to dashboard or home page on success
+      navigate("/"); // Use navigate for redirection
+    } else {
       setError(result.error || "Login failed");
     }
   };
 
   const handleGoogleLogin = () => {
+    // Make sure the URL dynamically matches your environment (dev/prod)
     window.location.href = "http://localhost:5000/api/auth/google";
   };
 
@@ -97,20 +108,25 @@ export default function Login() {
           {/* Buttons */}
           <motion.button
             type="submit"
+            disabled={loading}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B]"
+            className="w-full px-6 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B] disabled:opacity-50"
           >
-            Login
+            {loading ? "Logging In..." : "Login"}
           </motion.button>
           <motion.button
             type="button"
             onClick={handleGoogleLogin}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-gray-100 mt-4 flex items-center justify-center"
+            className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 mt-4 flex items-center justify-center"
           >
-            <img src="/google-icon.png" alt="Google" className="w-6 h-6 mr-2" />
+            <img
+              src={googleIcon}
+              alt="Google"
+              className="w-6 h-6 mr-2"
+            />
             Continue with Google
           </motion.button>
         </form>
