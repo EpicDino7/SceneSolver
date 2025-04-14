@@ -7,44 +7,55 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white text-black p-6 z-50 font-serif shadow-md">
-      <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <div className="text-2xl tracking-wide font-semibold">
-          clue<span className="text-[#D83A3A]">Xpert</span>
-        </div>
-        <nav className="flex items-center space-x-6 text-lg">
-          <Link
-            to="/"
-            className="hover:text-[#D83A3A] transition-colors duration-300"
-          >
-            Home
-          </Link>
-          {user ? (
-            <>
-              <Link
-                to="/upload"
-                className="hover:text-[#D83A3A] transition-colors duration-300"
-              >
-                Upload
-              </Link>
-              <button
-                onClick={logout}
-                className="hover:text-[#D83A3A] transition-colors duration-300"
-              >
-                Logout
-              </button>
-              <span className="text-[#D83A3A] font-semibold">
-                Hello, {user.displayName}
-              </span>
-            </>
-          ) : (
+      <div className="max-w-7xl mx-auto">
+        <div
+          className={`flex items-center w-full ${
+            user ? "justify-center gap-10" : "justify-between"
+          }`}
+        >
+          {/* Logo - Always visible */}
+          <div className="text-2xl tracking-wide font-semibold">
+            <Link to="/">
+              Clue<span className="text-[#D83A3A]">Xpert</span>
+            </Link>
+          </div>
+
+          {/* Nav Links */}
+          <nav className="flex items-center space-x-6 text-lg">
             <Link
-              to="/login"
+              to="/"
               className="hover:text-[#D83A3A] transition-colors duration-300"
             >
-              Login
+              Home
             </Link>
-          )}
-        </nav>
+            {user ? (
+              <>
+                <Link
+                  to="/upload"
+                  className="hover:text-[#D83A3A] transition-colors duration-300"
+                >
+                  Upload
+                </Link>
+                <button
+                  onClick={logout}
+                  className="hover:text-[#D83A3A] transition-colors duration-300"
+                >
+                  Logout
+                </button>
+                <span className="text-[#D83A3A] font-semibold">
+                  Hello, {user.displayName}
+                </span>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="hover:text-[#D83A3A] transition-colors duration-300"
+              >
+                Login
+              </Link>
+            )}
+          </nav>
+        </div>
       </div>
     </header>
   );

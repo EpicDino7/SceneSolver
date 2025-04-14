@@ -19,6 +19,8 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [index, setIndex] = useState(0);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Auto-change background every 5 seconds
   useEffect(() => {
@@ -30,20 +32,25 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
 
+    setLoading(true);
     const result = await signup({
       email,
       password,
       displayName: name,
     });
+    setLoading(false);
 
     if (!result.success) {
-      alert(result.error || "Signup failed");
+      setError(result.error || "Signup failed");
+    } else {
+      navigate("/");
     }
   };
 
@@ -75,10 +82,14 @@ export default function Signup() {
         <h2 className="text-4xl font-bold text-white">Create Account</h2>
         <p className="text-gray-300 mt-3 text-lg">Sign up to get started</p>
 
+        {/* Error Message */}
+        {error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+
         {/* Signup Form */}
         <form onSubmit={handleSignup} className="mt-6 space-y-5">
           <input
             type="text"
+            autoComplete="name"
             placeholder="Full Name"
             className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
             value={name}
@@ -87,6 +98,7 @@ export default function Signup() {
           />
           <input
             type="email"
+            autoComplete="email"
             placeholder="Email"
             className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
             value={email}
@@ -95,6 +107,7 @@ export default function Signup() {
           />
           <input
             type="password"
+            autoComplete="new-password"
             placeholder="Password"
             className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
             value={password}
@@ -103,6 +116,7 @@ export default function Signup() {
           />
           <input
             type="password"
+            autoComplete="new-password"
             placeholder="Confirm Password"
             className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
             value={confirmPassword}
@@ -113,11 +127,12 @@ export default function Signup() {
           {/* Signup Button */}
           <motion.button
             type="submit"
+            disabled={loading}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B]"
+            className="w-full px-6 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B] disabled:opacity-50"
           >
-            Sign Up
+            {loading ? "Signing Up..." : "Sign Up"}
           </motion.button>
         </form>
 

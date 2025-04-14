@@ -23,9 +23,9 @@ export default function Upload() {
     return () => clearInterval(interval);
   }, []);
 
-  // const onDrop = (acceptedFiles) => {
-  //   setFiles(acceptedFiles);
-  // };
+  const onDrop = (acceptedFiles) => {
+    setFiles(acceptedFiles);
+  };
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
