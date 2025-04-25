@@ -1,7 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
-import Guser from "../models/guser.js";
 import { validateEmail, validatePassword } from "../utils/validation.js";
 
 const router = express.Router();

@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("token", data.token);
       setUser(data.user);
-      navigate("/dashboard");
+      navigate("/");
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem("token", data.token);
       setUser(data.user);
-      navigate("/dashboard");
+      navigate("/");
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
-          navigate("/dashboard");
+          navigate("/");
         } else {
           throw new Error("Failed to get user data");
         }
