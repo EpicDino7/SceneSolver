@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 import Guser from "../models/guser.js";
 
 dotenv.config();

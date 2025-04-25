@@ -64,21 +64,21 @@ router.get("/current_user", async (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error("Logout error:", err);
-      return res.status(500).json({ error: "Error logging out" });
-    }
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Session destruction error:", err);
-        return res.status(500).json({ error: "Error destroying session" });
-      }
-      res.clearCookie("sessionId");
-      res.json({ message: "Logged out successfully" });
-    });
-  });
-});
+// router.get("/logout", (req, res) => {
+//   req.logout((err) => {
+//     if (err) {
+//       console.error("Logout error:", err);
+//       return res.status(500).json({ error: "Error logging out" });
+//     }
+//     req.session.destroy((err) => {
+//       if (err) {
+//         console.error("Session destruction error:", err);
+//         return res.status(500).json({ error: "Error destroying session" });
+//       }
+//       res.clearCookie("sessionId");
+//       res.json({ message: "Logged out successfully" });
+//     });
+//   });
+// });
 
 export default router;
