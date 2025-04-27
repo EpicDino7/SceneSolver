@@ -53,7 +53,7 @@ export default function Login() {
   };
 
   return (
-    <section className="relative w-full h-[100vh] flex justify-center items-center text-center px-6 overflow-hidden">
+    <section className="relative w-full h-screen flex flex-col text-center px-6 overflow-hidden">
       {/* Background Image Slider */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
         {images.map((img, i) => (
@@ -71,77 +71,85 @@ export default function Login() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
 
-      <motion.div
-        className="relative z-10 bg-white/10 backdrop-blur-lg p-10 rounded-xl shadow-xl max-w-md w-full"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-4xl font-bold text-white">Welcome Back!</h2>
-        <p className="text-gray-300 mt-3 text-lg">Sign in to continue</p>
+      Header
+      <header className="relative z-10 text-white text-2xl font-bold py-4">
+        SceneSolver
+      </header>
 
-        {error && (
-          <div className="mt-4 p-3 bg-red-500/20 text-red-100 rounded-lg">
-            {error}
-          </div>
-        )}
+      {/* Login Box */}
+      <div className="flex-grow flex justify-center items-center">
+        <motion.div
+          className="relative z-10 bg-white/10 backdrop-blur-lg p-10 rounded-xl shadow-xl max-w-md w-full"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <h2 className="text-4xl font-bold text-white">Welcome Back!</h2>
+          <p className="text-gray-300 mt-3 text-lg">Log in to continue</p>
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="mt-6 space-y-5">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          {error && (
+            <div className="mt-4 p-3 bg-red-500/20 text-red-100 rounded-lg">
+              {error}
+            </div>
+          )}
 
-          {/* Buttons */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B] disabled:opacity-50"
-          >
-            {loading ? "Logging In..." : "Login"}
-          </motion.button>
-          <motion.button
-            type="button"
-            onClick={handleGoogleLogin}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 mt-4 flex items-center justify-center"
-          >
-            <img
-              src={googleIcon}
-              alt="Google"
-              className="w-6 h-6 mr-2"
+          {/* Login Form */}
+          <form onSubmit={handleLogin} className="mt-6 space-y-5">
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
-            Continue with Google
-          </motion.button>
-        </form>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full px-5 py-4 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D83A3A]"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-        {/* Sign-up Link */}
-        <p className="text-gray-300 mt-5 text-lg">
-          Don't have an account?{" "}
-          <Link
-            to="/signup"
-            className="text-[#D83A3A] font-semibold hover:underline"
-          >
-            Sign up here
-          </Link>
-        </p>
-      </motion.div>
+            {/* Buttons */}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full px-5 py-4 bg-[#D83A3A] text-white font-semibold text-lg rounded-lg shadow-md transition-all duration-300 hover:bg-[#B92B2B] disabled:opacity-50"
+            >
+              {loading ? "Logging In..." : "Login"}
+            </motion.button>
+            <motion.button
+              type="button"
+              onClick={handleGoogleLogin}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 flex items-center justify-center"
+            >
+              <img
+                src={googleIcon}
+                alt="Google"
+                className="w-6 h-6 mr-2"
+              />
+              Continue with Google
+            </motion.button>
+          </form>
+
+          {/* Sign-up Link */}
+          <p className="text-gray-300 mt-5 text-lg">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-[#D83A3A] font-semibold hover:underline"
+            >
+              Sign up here
+            </Link>
+          </p>
+        </motion.div>
+      </div>
     </section>
   );
 }
