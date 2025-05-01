@@ -10,8 +10,13 @@ import crimeSceneImg from "./assets/crimeSceneImg.jpg";
 import cs1 from "./assets/cs1.jpg";
 import cs2 from "./assets/cs2.jpg";
 import cs3 from "./assets/cs3.jpg";
+import cs4 from "./assets/cs4.jpeg";
+import cs5 from "./assets/cs5.jpeg";
+import cs6 from "./assets/cs6.jpeg";
+import cs7 from "./assets/cs7.jpeg";
+import cs8 from "./assets/cs8.jpeg";
 
-const images = [crimeSceneImg, cs1, cs2, cs3];
+const images = [crimeSceneImg, cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8];
 
 export default function Login() {
   const auth = useAuth();
