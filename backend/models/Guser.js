@@ -39,7 +39,7 @@ guserSchema.methods.addAuthMethod = function (method) {
   }
 };
 
-const Guser = mongoose.model("Guser", guserSchema);
+const Guser = mongoose.models.Guser || mongoose.model("Guser", guserSchema);
 
 Guser.collection.dropIndex("email_1").catch(() => {
   console.log("No existing email index to drop");
