@@ -9,6 +9,11 @@ const images = [
   "src/assets/cs1.jpg",
   "src/assets/cs2.jpg",
   "src/assets/cs3.jpg",
+  "src/assets/cs4.jpeg",
+  "src/assets/cs5.jpeg",
+  "src/assets/cs6.jpeg",
+  "src/assets/cs7.jpeg",
+  "src/assets/cs8.jpeg",
 ];
 
 export default function Signup() {
