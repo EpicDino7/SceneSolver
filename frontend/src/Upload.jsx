@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { motion } from "framer-motion";
+
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { useAuth } from "./context/AuthContext";
 
 const images = [
   "src/assets/crimeSceneImg.jpg",
@@ -17,12 +20,15 @@ const images = [
 export default function Upload() {
   const [step, setStep] = useState(1);
   const [caseTitle, setCaseTitle] = useState("");
+  const { user } = useAuth();
   const [files, setFiles] = useState([]);
   const [index, setIndex] = useState(0);
   const [prediction, setPrediction] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  console.log(`Current user is:  ${user.email}`);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,7 +39,9 @@ export default function Upload() {
 
   const onDrop = (acceptedFiles) => {
     const validFiles = acceptedFiles.filter((file) =>
-      ["image/png", "image/jpeg", "video/mp4", "video/quicktime"].includes(file.type)
+      ["image/png", "image/jpeg", "video/mp4", "video/quicktime"].includes(
+        file.type
+      )
     );
 
     if (validFiles.some((file) => file.type.startsWith("video"))) {
@@ -70,10 +78,15 @@ export default function Upload() {
 
     setLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/route",
+        { formData },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       const data = await response.json();
       setPrediction(data.prediction || "No prediction returned.");
@@ -145,7 +158,10 @@ export default function Upload() {
           <>
             <h2 className="text-4xl font-bold text-white">{caseTitle}</h2>
             <p className="text-gray-300 mt-3 text-lg">
-              Upload <span className="text-[#D83A3A] font-semibold">one video</span> OR at least <span className="text-[#D83A3A] font-semibold">4 images</span>.
+              Upload{" "}
+              <span className="text-[#D83A3A] font-semibold">one video</span> OR
+              at least{" "}
+              <span className="text-[#D83A3A] font-semibold">4 images</span>.
             </p>
 
             <div
@@ -158,14 +174,20 @@ export default function Upload() {
             >
               <input {...getInputProps()} />
               {isDragActive ? (
-                <p className="text-[#D83A3A] font-semibold text-lg">Drop files here...</p>
+                <p className="text-[#D83A3A] font-semibold text-lg">
+                  Drop files here...
+                </p>
               ) : (
-                <p className="text-gray-300 text-lg">Drag and drop files or click to upload</p>
+                <p className="text-gray-300 text-lg">
+                  Drag and drop files or click to upload
+                </p>
               )}
             </div>
 
             {error && <p className="text-red-400 mt-4 text-sm">{error}</p>}
-            {successMessage && <p className="text-green-400 mt-4 text-sm">{successMessage}</p>}
+            {successMessage && (
+              <p className="text-green-400 mt-4 text-sm">{successMessage}</p>
+            )}
 
             {files.length > 0 && (
               <div className="mt-6 max-h-40 overflow-y-auto space-y-2 text-left">
@@ -192,7 +214,8 @@ export default function Upload() {
 
             {prediction && (
               <div className="mt-6 text-white bg-black/40 p-4 rounded-2xl text-left shadow-inner">
-                <strong className="text-[#D83A3A]">Prediction:</strong> {prediction}
+                <strong className="text-[#D83A3A]">Prediction:</strong>{" "}
+                {prediction}
               </div>
             )}
           </>

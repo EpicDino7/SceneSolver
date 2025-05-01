@@ -6,7 +6,9 @@ import session from "express-session";
 import passport from "passport";
 import gauthRoutes from "./routes/gauth.js";
 import authRoutes from "./routes/auth.js";
+import uploadRoutes from "./routes/upload.js";
 import "./config/passport.js";
+import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   cors({
@@ -58,7 +61,7 @@ app.use((req, res, next) => {
 
 app.use("/api/auth", gauthRoutes);
 app.use("/api/auth/local", authRoutes);
-
+app.use("/api/upload", uploadRoutes);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
