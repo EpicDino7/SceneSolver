@@ -16,7 +16,7 @@ export default function Header() {
           {/* Logo - Always visible */}
           <div className="text-2xl tracking-wide font-semibold">
             <Link to="/">
-              Clue<span className="text-[#D83A3A]">Xpert</span>
+              Scene<span className="text-[#D83A3A]">Solver</span>
             </Link>
           </div>
 
@@ -27,6 +27,12 @@ export default function Header() {
               className="hover:text-[#D83A3A] transition-colors duration-300"
             >
               Home
+            </Link>
+            <Link
+              to="/about"
+              className="hover:text-[#D83A3A] transition-colors duration-300"
+            >
+              About
             </Link>
             {user ? (
               <>
@@ -42,9 +48,12 @@ export default function Header() {
                 >
                   Logout
                 </button>
-                <span className="text-[#D83A3A] font-semibold">
+                <Link
+                  to="/user"
+                  className="text-[#D83A3A] font-semibold hover:underline"
+                >
                   Hello, {user.displayName}
-                </span>
+                </Link>
               </>
             ) : (
               <Link
