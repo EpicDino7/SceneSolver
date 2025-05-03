@@ -12,6 +12,8 @@ import Dashboard from "./Dashboard";
 import Login from "./Login";
 import Signup from "./Signup";
 import Upload from "./Upload";
+import User from "./user"; // Import the User component
+import About from "./about"; // Import the About component
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -60,11 +62,20 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} /> {/* About Page Route */}
         <Route
           path="/upload"
           element={
             <ProtectedRoute>
               <Upload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute>
+              <User />
             </ProtectedRoute>
           }
         />
