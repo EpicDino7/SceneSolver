@@ -1,0 +1,78 @@
+# Large model files - IMPORTANT: Comment out the ones you want to keep in repo
+# Essential model files (uncomment to exclude from repo):
+# clip_finetuned_few_shot.pth
+# vit_model.pth
+# clip_model_weights.pth
+
+# Temporary/downloaded model files (always exclude)
+*.tmp.pth
+*.download.pth
+*_backup.pth
+checkpoint_*.pth
+
+# Other model formats
+*.bin
+*.safetensors
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Uploaded files and temporary directories
+uploads/
+frames/
+temp/
+*.tmp
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite3
+
+# Node modules (if any frontend)
+node_modules/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg 
