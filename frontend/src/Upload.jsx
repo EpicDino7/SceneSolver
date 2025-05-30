@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useDropzone } from "react-dropzone";
 import { useAuth } from "./context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
 
-const images = [
-  "src/assets/crimeSceneImg.jpg",
-  "src/assets/cs1.jpg",
-  "src/assets/cs2.jpg",
-  "src/assets/cs3.jpg",
-  "src/assets/cs4.jpeg",
-  "src/assets/cs5.jpeg",
-  "src/assets/cs6.jpeg",
-  "src/assets/cs7.jpeg",
-  "src/assets/cs8.jpeg",
-];
+// Import assets properly for Vite
+import crimeSceneImg from "./assets/crimeSceneImg.jpg";
+import cs1 from "./assets/cs1.jpg";
+import cs2 from "./assets/cs2.jpg";
+import cs3 from "./assets/cs3.jpg";
+import cs4 from "./assets/cs4.jpeg";
+import cs5 from "./assets/cs5.jpeg";
+import cs6 from "./assets/cs6.jpeg";
+import cs7 from "./assets/cs7.jpeg";
+import cs8 from "./assets/cs8.jpeg";
+
+// API URL configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const images = [crimeSceneImg, cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8];
 
 function ImageUploader({ multiple, maxFiles, minFiles, onFilesChange }) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -162,7 +166,7 @@ export default function Upload() {
       files.forEach((file) => finalFormData.append("files", file));
 
       const uploadRes = await axios.post(
-        "http://localhost:5000/api/upload",
+        `${API_URL}/api/upload`,
         finalFormData,
         {
           headers: {

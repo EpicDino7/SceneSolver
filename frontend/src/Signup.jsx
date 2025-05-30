@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import OTPVerification from "./components/OTPVerification";
 
-const images = [
-  "src/assets/crimeSceneImg.jpg",
-  "src/assets/cs1.jpg",
-  "src/assets/cs2.jpg",
-  "src/assets/cs3.jpg",
-  "src/assets/cs4.jpeg",
-  "src/assets/cs5.jpeg",
-  "src/assets/cs6.jpeg",
-  "src/assets/cs7.jpeg",
-  "src/assets/cs8.jpeg",
-];
+// Import assets properly for Vite
+import crimeSceneImg from "./assets/crimeSceneImg.jpg";
+import cs1 from "./assets/cs1.jpg";
+import cs2 from "./assets/cs2.jpg";
+import cs3 from "./assets/cs3.jpg";
+import cs4 from "./assets/cs4.jpeg";
+import cs5 from "./assets/cs5.jpeg";
+import cs6 from "./assets/cs6.jpeg";
+import cs7 from "./assets/cs7.jpeg";
+import cs8 from "./assets/cs8.jpeg";
+import googleImg from "./assets/google_img.png";
+
+// API URL configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const images = [crimeSceneImg, cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8];
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -181,17 +186,13 @@ export default function Signup() {
             <motion.button
               type="button"
               onClick={() =>
-                (window.location.href = "http://localhost:5000/api/auth/google")
+                (window.location.href = `${API_URL}/api/auth/google`)
               }
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 flex items-center justify-center"
             >
-              <img
-                src="src/assets/google_img.png"
-                alt="Google"
-                className="w-6 h-6 mr-2"
-              />
+              <img src={googleImg} alt="Google" className="w-6 h-6 mr-2" />
               Continue with Google
             </motion.button>
           </form>

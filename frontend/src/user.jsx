@@ -4,12 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "./context/AuthContext";
 import html2pdf from "html2pdf.js";
 
-const images = [
-  "src/assets/crimeSceneImg.jpg",
-  "src/assets/cs1.jpg",
-  "src/assets/cs2.jpg",
-  "src/assets/cs3.jpg",
-];
+// Import assets properly for Vite
+import crimeSceneImg from "./assets/crimeSceneImg.jpg";
+import cs1 from "./assets/cs1.jpg";
+import cs2 from "./assets/cs2.jpg";
+import cs3 from "./assets/cs3.jpg";
+
+const images = [crimeSceneImg, cs1, cs2, cs3];
+
+// API URL configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function User() {
   const { user } = useAuth();
@@ -41,9 +45,7 @@ export default function User() {
 
   const fetchUserCases = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/upload/user?email=${email}`
-      );
+      const res = await axios.get(`${API_URL}/api/upload/user?email=${email}`);
       // console.log("Raw case data:", res.data);
 
       const filtered = res.data.filter(
@@ -68,7 +70,7 @@ export default function User() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/upload/user/case?email=${email}&caseName=${caseName}`
+        `${API_URL}/api/upload/user/case?email=${email}&caseName=${caseName}`
       );
 
       setCaseDetails(res.data);
@@ -330,7 +332,7 @@ export default function User() {
               style={{ maxHeight: "400px" }}
             >
               <source
-                src={`http://localhost:5000/api/upload/file/${file._id}`}
+                src={`${API_URL}/api/upload/file/${file._id}`}
                 type={file.contentType}
               />
               Your browser does not support the video tag.
@@ -349,14 +351,12 @@ export default function User() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             onClick={() => {
-              setModalImage(
-                `http://localhost:5000/api/upload/file/${file._id}`
-              );
+              setModalImage(`${API_URL}/api/upload/file/${file._id}`);
               setModalOpen(true);
             }}
           >
             <img
-              src={`http://localhost:5000/api/upload/file/${file._id}`}
+              src={`${API_URL}/api/upload/file/${file._id}`}
               alt={file.filename || "Case image"}
               className="w-full h-56 object-cover transform group-hover:scale-105 transition duration-300 ease-in-out"
             />
@@ -416,7 +416,7 @@ export default function User() {
       newFiles.forEach((file) => formData.append("files", file));
 
       const response = await axios.post(
-        "http://localhost:5000/api/upload/add-to-case",
+        `${API_URL}/api/upload/add-to-case`,
         formData,
         {
           headers: {

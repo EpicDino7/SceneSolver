@@ -18,6 +18,9 @@ import cs8 from "./assets/cs8.jpeg";
 
 const images = [crimeSceneImg, cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8];
 
+// API URL configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function Login() {
   const auth = useAuth();
   const login = auth?.login;
@@ -54,7 +57,7 @@ export default function Login() {
 
   const handleGoogleLogin = () => {
     // Make sure the URL dynamically matches your environment (dev/prod)
-    window.location.href = "http://localhost:5000/api/auth/google";
+    window.location.href = `${API_URL}/api/auth/google`;
   };
 
   return (
@@ -72,15 +75,12 @@ export default function Login() {
           />
         ))}
       </div>
-
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
-
       Header
       <header className="relative z-10 text-white text-2xl font-bold py-4">
         SceneSolver
       </header>
-
       {/* Login Box */}
       <div className="flex-grow flex justify-center items-center">
         <motion.div
@@ -134,11 +134,7 @@ export default function Login() {
               whileTap={{ scale: 0.95 }}
               className="w-full px-6 py-4 bg-white text-gray-700 font-semibold text-lg rounded-lg shadow-md transition-all duration-300 flex items-center justify-center"
             >
-              <img
-                src={googleIcon}
-                alt="Google"
-                className="w-6 h-6 mr-2"
-              />
+              <img src={googleIcon} alt="Google" className="w-6 h-6 mr-2" />
               Continue with Google
             </motion.button>
           </form>
