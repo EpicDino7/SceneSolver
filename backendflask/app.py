@@ -6,6 +6,10 @@ import os
 import json
 import shutil
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Try to import the crime pipeline, handle case where models are missing
 try:
@@ -19,9 +23,9 @@ except Exception as e:
 app = Flask(__name__)
 CORS(app) 
 
-# Constants
-UPLOAD_FOLDER = "uploads"
-FRAMES_FOLDER = "frames"
+# Constants - now using environment variables with defaults
+UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', 'uploads')
+FRAMES_FOLDER = os.getenv('FRAMES_FOLDER', 'frames')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi'}
 
 # Create directories
@@ -34,7 +38,7 @@ if MODELS_AVAILABLE:
     try:
         load_models(
             vit_checkpoint="vit_model.pth",
-            clip_checkpoint="clip_finetuned_few_shot.pth" 
+            clip_checkpoint="clip_finetuned_few_shot.pth"
         )
         print("✅ Models loaded successfully")
     except Exception as e:
@@ -42,11 +46,18 @@ if MODELS_AVAILABLE:
         print("💡 Run 'python download_models.py' to set up model files")
         MODELS_AVAILABLE = False
 
-# MongoDB setup
+# MongoDB setup - now using environment variables
 try:
-    client = MongoClient("mongodb+srv://adityapanyala:Sanjeeva7@nodeexpressprojects.m2toq.mongodb.net/crimescene?retryWrites=true&w=majority&appName=NodeExpressProjects") 
-    db = client["crime_db"]
-    collection = db["predictions"]
+    mongodb_url = os.getenv('MONGODB_URL')
+    if not mongodb_url:
+        raise ValueError("MONGODB_URL environment variable not set")
+    
+    client = MongoClient(mongodb_url)
+    db_name = os.getenv('MONGODB_DB_NAME', 'crime_db')
+    collection_name = os.getenv('MONGODB_COLLECTION_NAME', 'predictions')
+    
+    db = client[db_name]
+    collection = db[collection_name]
     print("✅ MongoDB connected successfully")
 except Exception as e:
     print(f"⚠️ MongoDB connection failed: {e}")
@@ -118,7 +129,8 @@ def health_check():
     model_files = [
         "clip_finetuned_few_shot.pth",
         "vit_model.pth", 
-        "clip_model_weights.pth"
+        "clip_model_weights.pth",
+        "vit_pretrained_evidence.pth"  # Add pretrained ViT model
     ]
     
     for model_file in model_files:

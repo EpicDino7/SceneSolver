@@ -18,9 +18,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Updated CORS configuration for production
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://your-vercel-app.vercel.app", // Replace with your Vercel URL
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
@@ -30,7 +37,10 @@ app.use(
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -55,8 +65,7 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "lax",
-      domain: "localhost",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
     name: "sessionId",
   })
@@ -69,6 +78,15 @@ app.use((req, res, next) => {
   console.log("Session:", req.session);
   console.log("User:", req.user);
   next();
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+  });
 });
 
 app.use("/api/auth", gauthRoutes);

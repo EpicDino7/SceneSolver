@@ -123,7 +123,7 @@ router.post("/", upload.array("files"), async (req, res) => {
                     - crime_confidence: the model's confidence in the prediction
                     - extracted_evidence: a list of visual evidence with description and confidence levels
 
-                    Your output must follow this exact structure:
+                    Your output must follow this exact structure but do not include any markdown formatting or asterisks:
 
                     CRIME SCENE INVESTIGATION REPORT
                     ===============================

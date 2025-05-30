@@ -10,6 +10,15 @@ import torch.nn as nn
 from transformers import CLIPProcessor, CLIPModel
 from vit_new import VisionTransformer
 
+# Import improved pretrained ViT model
+try:
+    from vit_pretrained_model import PretrainedViTEvidenceModel, extract_evidence_from_image
+    PRETRAINED_VIT_AVAILABLE = True
+    print("✅ Pretrained ViT model available")
+except ImportError as e:
+    print(f"⚠️ Pretrained ViT model not available: {e}")
+    PRETRAINED_VIT_AVAILABLE = False
+
 # === Config ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 FRAME_FOLDER = "frames"
@@ -93,20 +102,35 @@ class FewShotFineTunedCLIP:
 # Global models
 clip_classifier = None
 vit_model = VisionTransformer(num_classes=len(evidence_classes)).to(device)
+pretrained_vit_model = None  # New: Pretrained ViT model
 
-def load_models(vit_checkpoint="vit_model.pth", clip_checkpoint="clip_finetuned_few_shot.pth"):
-    global clip_classifier
+def load_models(vit_checkpoint="vit_model.pth", clip_checkpoint="clip_finetuned_few_shot.pth", pretrained_vit_checkpoint="vit_pretrained_evidence.pth"):
+    global clip_classifier, pretrained_vit_model
     
     print(f"🔍 Loading few-shot optimized models...")
     
     # Load few-shot CLIP classifier
     clip_classifier = FewShotFineTunedCLIP(model_path=clip_checkpoint)
     
-    # Load ViT checkpoint
-    print(f"🔍 Loading ViT checkpoint from: {vit_checkpoint}")
-    vit_ckpt = torch.load(vit_checkpoint, map_location=device)
-    vit_model.load_state_dict(vit_ckpt)
-    vit_model.eval()
+    # Load Pretrained ViT model first (primary)
+    if PRETRAINED_VIT_AVAILABLE:
+        try:
+            print(f"🔍 Loading pretrained ViT model from: {pretrained_vit_checkpoint}")
+            pretrained_vit_model = PretrainedViTEvidenceModel(model_path=pretrained_vit_checkpoint)
+            print("✅ Pretrained ViT model loaded successfully")
+        except Exception as e:
+            print(f"⚠️ Failed to load pretrained ViT: {e}")
+            pretrained_vit_model = None
+    
+    # Load scratch ViT checkpoint (fallback)
+    print(f"🔍 Loading scratch ViT checkpoint from: {vit_checkpoint}")
+    if os.path.exists(vit_checkpoint):
+        vit_ckpt = torch.load(vit_checkpoint, map_location=device)
+        vit_model.load_state_dict(vit_ckpt)
+        vit_model.eval()
+        print("✅ Scratch ViT model loaded successfully")
+    else:
+        print(f"⚠️ Scratch ViT checkpoint not found: {vit_checkpoint}")
     
     print("✅ All models loaded and ready for analysis.")
 
@@ -238,11 +262,37 @@ def predict_single_image(image_path):
             predicted_crime, crime_conf = predict_with_zeroshot_clip(image)
             model_type = "zero-shot"
 
-        # === ViT prediction for evidence ===
-        vit_input = vit_transforms(image).unsqueeze(0).to(device)
-        with torch.no_grad():
-            evidence_logits = vit_model(vit_input)
-            evidence_found = get_evidence_predictions(evidence_logits)
+        # === ViT prediction for evidence (improved with pretrained model) ===
+        evidence_found = []
+        vit_model_used = "unknown"
+        
+        # Try pretrained ViT first (primary)
+        if pretrained_vit_model is not None:
+            try:
+                evidence_results = pretrained_vit_model.extract_evidence(image, threshold=None, use_adaptive=True)
+                evidence_found = [
+                    {"label": result["evidence"], "confidence": round(result["confidence"], 3)}
+                    for result in evidence_results
+                ]
+                vit_model_used = "pretrained"
+                print(f"🎯 Pretrained ViT: Found {len(evidence_found)} evidences")
+            except Exception as e:
+                print(f"⚠️ Pretrained ViT failed: {e}, falling back to scratch ViT")
+                evidence_found = []
+        
+        # Fallback to scratch ViT if pretrained failed or not available
+        if not evidence_found and vit_model is not None:
+            try:
+                vit_input = vit_transforms(image).unsqueeze(0).to(device)
+                with torch.no_grad():
+                    evidence_logits = vit_model(vit_input)
+                    evidence_found = get_evidence_predictions(evidence_logits)
+                vit_model_used = "scratch"
+                print(f"🔧 Scratch ViT: Found {len(evidence_found)} evidences")
+            except Exception as e:
+                print(f"❌ Both ViT models failed: {e}")
+                evidence_found = []
+                vit_model_used = "failed"
 
         return {
             "image_name": os.path.basename(image_path),
@@ -250,6 +300,7 @@ def predict_single_image(image_path):
             "crime_confidence": crime_conf,
             "extracted_evidence": evidence_found,
             "model_type": model_type,
+            "vit_model_used": vit_model_used,
             "analysis_mode": "few_shot"
         }
 

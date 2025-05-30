@@ -20,10 +20,10 @@ backendflask/.env
 .env.production
 
 # Large AI model files (comment out if you want to include them)
-backendflask/*.pth
-backendflask/*.pt
-backendflask/*.bin
-backendflask/*.safetensors
+# backendflask/*.pth
+# backendflask/*.pt
+# backendflask/*.bin
+# backendflask/*.safetensors
 
 # Uploaded files and temporary data
 backendflask/uploads/
