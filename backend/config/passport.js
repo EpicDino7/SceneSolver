@@ -18,12 +18,20 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// Determine the correct callback URL based on environment
+const getCallbackURL = () => {
+  if (process.env.NODE_ENV === "production") {
+    return "https://scenesolver-backend-2wb1.onrender.com/api/auth/google/callback";
+  }
+  return "/api/auth/google/callback"; // Relative URL for development
+};
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: getCallbackURL(),
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
