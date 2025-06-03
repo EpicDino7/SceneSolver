@@ -15,7 +15,7 @@ import Upload from "./Upload";
 import User from "./User.jsx"; // Import the User component with explicit extension
 import About from "./about"; // Import the About component
 import CaseSummary from "./CaseSummary";
-
+//
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
