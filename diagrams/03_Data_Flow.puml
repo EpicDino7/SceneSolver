@@ -1,0 +1,79 @@
+@startuml Data Flow
+
+!theme vibrant
+skinparam backgroundColor #FEFEFE
+skinparam activityFontSize 12
+skinparam activityArrowFontSize 10
+skinparam activityBorderColor #2196F3
+skinparam activityBackgroundColor #E3F2FD
+
+title SceneSolver - Data Flow & Processing Pipeline
+
+|#E3F2FD|Frontend|
+start
+:User Access Platform;
+note right : Login/Signup via Google OAuth or Email
+
+:Navigate to Upload Page;
+:Select Crime Scene Files
+(Images/Videos);
+note right 
+  **Supported Formats:**
+  • Images: JPG, PNG, JPEG
+  • Videos: MP4, MOV, AVI
+end note
+
+:Fill Case Metadata
+(Name, Location, Date, Time);
+
+|#E8F5E8|Backend API|
+:Validate User Session;
+:Store File Metadata
+in MongoDB;
+:Upload Files to GridFS;
+
+|#FFF3E0|ML Processing|
+:Forward Files to
+Flask ML Service;
+
+if (File Type?) then (Video)
+  :Extract Frames
+  from Video;
+else (Images)
+  :Process Images
+  Directly;
+endif
+
+:Analyze with CLIP Model
+(Crime Classification);
+:Analyze with ViT Model
+(Evidence Detection);
+:Generate AI Summary
+with Gemini API;
+
+|#E8F5E8|Backend API|
+:Store Analysis Results
+in MongoDB;
+:Associate Results
+with Case;
+
+|#E3F2FD|Frontend|
+:Display Results
+to User;
+:Show Crime Type
+& Confidence;
+:Show Detected Evidence;
+:Display AI Summary;
+:Generate PDF Report;
+
+stop
+
+' === LEGEND ===
+legend bottom
+  |= Color |= Component |
+  | #E3F2FD | Frontend (React) |
+  | #E8F5E8 | Backend (Node.js) |
+  | #FFF3E0 | ML Backend (Flask) |
+endlegend
+
+@enduml 

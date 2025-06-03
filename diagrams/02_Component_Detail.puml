@@ -1,0 +1,133 @@
+@startuml Component Details
+
+!theme vibrant
+skinparam backgroundColor #FEFEFE
+skinparam componentStyle rectangle
+skinparam packageStyle folder
+skinparam linetype polyline
+skinparam roundcorner 10
+
+title SceneSolver - Detailed Component Architecture
+
+' === FRONTEND COMPONENTS ===
+package "Frontend (React)" as frontend #E3F2FD {
+  
+  folder "Core Components" {
+    component [App.jsx] as app #1976D2
+    component [Header.jsx] as header #1976D2
+    component [AuthContext.jsx] as authctx #1976D2
+  }
+  
+  folder "Authentication" {
+    component [Login.jsx] as login #42A5F5
+    component [Signup.jsx] as signup #42A5F5
+    component [OTPVerification.jsx] as otp #42A5F5
+  }
+  
+  folder "Features" {
+    component [Dashboard.jsx] as dashboard #64B5F6
+    component [Upload.jsx] as upload #64B5F6
+    component [User.jsx] as user #64B5F6
+    component [About.jsx] as about #64B5F6
+    component [CaseSummary.jsx] as summary #64B5F6
+  }
+}
+
+' === BACKEND COMPONENTS ===
+package "Backend (Node.js)" as backend #E8F5E8 {
+  
+  folder "Server Core" {
+    component [Express Server] as express #2E7D32
+    component [Passport Config] as passport #2E7D32
+  }
+  
+  folder "API Routes" {
+    component [Auth Routes] as authroutes #4CAF50
+    component [Upload Routes] as uploadroutes #4CAF50
+    component [Google Auth Routes] as gauthroutes #4CAF50
+  }
+  
+  folder "Data Models" {
+    component [User Model] as usermodel #66BB6A
+    component [Google User Model] as gusermodel #66BB6A
+  }
+  
+  folder "Storage" {
+    component [GridFS Storage] as gridfs #81C784
+  }
+}
+
+' === ML BACKEND COMPONENTS ===
+package "ML Backend (Flask)" as mlbackend #FFF3E0 {
+  
+  folder "API Layer" {
+    component [Flask Server] as flask #E65100
+    component [Gradio Interface] as gradio #E65100
+  }
+  
+  folder "AI Pipeline" {
+    component [Crime Pipeline] as pipeline #FF9800
+    component [Frame Processor] as frameproc #FF9800
+  }
+  
+  folder "ML Models" {
+    component [CLIP Model] as clip #FFB74D
+    component [ViT Model] as vit #FFB74D
+    component [Evidence Extractor] as evidence #FFB74D
+  }
+}
+
+' === EXTERNAL SERVICES ===
+cloud "MongoDB Atlas" as mongodb #4CAF50
+cloud "Google OAuth" as google #DB4437
+
+' === FRONTEND INTERNAL CONNECTIONS ===
+app --> header
+app --> authctx
+app --> dashboard
+app --> upload
+app --> user
+app --> about
+app --> summary
+
+login --> otp
+signup --> otp
+authctx ..> login
+authctx ..> signup
+
+' === FRONTEND TO BACKEND ===
+authctx --> authroutes : "JWT Auth"
+upload --> uploadroutes : "File Upload"
+user --> uploadroutes : "Case Data"
+login --> gauthroutes : "OAuth"
+signup --> gauthroutes : "OAuth"
+
+' === FRONTEND TO ML ===
+upload --> flask : "ML Analysis"
+user --> flask : "Results"
+
+' === BACKEND INTERNAL ===
+express --> authroutes
+express --> uploadroutes
+express --> gauthroutes
+authroutes --> usermodel
+gauthroutes --> gusermodel
+authroutes --> passport
+uploadroutes --> gridfs
+
+' === ML INTERNAL ===
+flask --> pipeline
+flask --> gradio
+pipeline --> frameproc
+pipeline --> clip
+pipeline --> vit
+pipeline --> evidence
+
+' === EXTERNAL CONNECTIONS ===
+passport --> google
+usermodel --> mongodb
+gusermodel --> mongodb
+gridfs --> mongodb
+flask --> mongodb
+
+@enduml 

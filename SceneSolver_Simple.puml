@@ -1,0 +1,73 @@
+@startuml SceneSolver Simple Architecture
+
+!theme toy
+title SceneSolver - High-Level Component Architecture
+
+' Cloud Services
+cloud "Vercel\n(Frontend Hosting)" as vercel #lightblue
+cloud "Railway\n(Backend Hosting)" as railway #lightgreen  
+cloud "Hugging Face\n(ML Hosting)" as hf #orange
+database "MongoDB Atlas\n(Database)" as mongodb #green
+
+' Main System Components
+[Frontend\nReact + Vite] as frontend #lightblue
+[Backend\nNode.js + Express] as backend #lightgreen
+[ML Backend\nFlask + PyTorch] as mlbackend #orange
+
+' Key Frontend Components
+package "Frontend Components" {
+  [Authentication] as auth
+  [File Upload] as upload
+  [Case Management] as cases
+  [Dashboard] as dashboard
+}
+
+' Key Backend Components  
+package "Backend Services" {
+  [REST API] as api
+  [User Management] as users
+  [File Storage] as storage
+  [Google OAuth] as oauth
+}
+
+' Key ML Components
+package "ML Services" {
+  [Crime Classification] as classification
+  [Evidence Detection] as detection
+  [CLIP Model] as clip
+  [ViT Model] as vit
+}
+
+' Main Data Flow
+frontend --> backend : "API Requests\n(Auth, Files, Cases)"
+frontend --> mlbackend : "ML Analysis\nRequests"
+backend --> mongodb : "Store User Data\n& File Metadata"
+mlbackend --> mongodb : "Store Analysis\nResults"
+backend --> mlbackend : "Forward Files\nfor Analysis"
+
+' Component Relationships
+auth --> api
+upload --> api
+cases --> api
+dashboard --> api
+
+api --> users
+api --> storage
+api --> oauth
+
+classification --> clip
+classification --> vit
+detection --> clip
+detection --> vit
+
+' Deployment Relationships
+frontend .up.> vercel : "deployed on"
+backend .up.> railway : "deployed on"
+mlbackend .up.> hf : "deployed on"
+
+' Data Flow Steps
+note top of frontend : "1. User Interface\n• Login/Signup\n• Upload Files\n• View Results"
+note top of backend : "2. API Gateway\n• Authentication\n• File Management\n• Data Storage"
+note top of mlbackend : "3. AI Analysis\n• Crime Classification\n• Evidence Detection\n• Report Generation"
+
+@enduml 

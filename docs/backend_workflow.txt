@@ -1,0 +1,20 @@
+User Upload (video or images)
+        ↓
+[If video] → Frame Extraction
+        ↓
+Each frame:
+   → Resize + Normalize
+   → CLIP (crime classification)
+   → ViT (evidence detection)
+        ↓
+Combine outputs per frame
+        ↓
+Aggregate & Send to AI API for report
+        ↓
+Receive summary → Save all to MongoDB
+        ↓
+User adds more frames later:
+   → Load previous outputs from MongoDB
+   → Combine new + old frames
+   → Re-run CLIP & ViT → regenerate report
+   → Save updated report

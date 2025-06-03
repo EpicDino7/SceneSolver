@@ -1,0 +1,123 @@
+@startuml Deployment Architecture
+
+!theme vibrant
+skinparam backgroundColor #FEFEFE
+skinparam nodeStyle rectangle
+skinparam componentStyle rectangle
+skinparam cloudStyle rectangle
+skinparam databaseStyle rectangle
+
+title SceneSolver - Deployment Architecture
+
+' === USER LAYER ===
+actor "End Users" as users #4A90E2
+
+' === CDN/EDGE LAYER ===
+cloud "Vercel Edge Network" as edge #00D4AA {
+  node "Global CDN" as cdn #00C49F
+}
+
+' === FRONTEND LAYER ===
+cloud "Vercel Platform" as vercel_platform #00D4AA {
+  node "React Application" as react_app #2196F3 {
+    component [Static Assets] as assets
+    component [JavaScript Bundle] as js_bundle
+    component [CSS/Styles] as styles
+  }
+}
+
+' === API LAYER ===
+cloud "Railway Platform" as railway_platform #7B68EE {
+  node "Node.js Runtime" as nodejs_runtime #4CAF50 {
+    component [Express Server] as express_server
+    component [Authentication] as auth_service
+    component [File Upload API] as upload_api
+    component [Case Management] as case_api
+  }
+}
+
+' === ML LAYER ===
+cloud "Hugging Face Spaces" as hf_platform #FF6B35 {
+  node "Python Runtime" as python_runtime #FF9800 {
+    component [Flask API] as flask_api
+    component [AI Models] as ai_models
+    component [Gradio Interface] as gradio_ui
+  }
+}
+
+' === DATABASE LAYER ===
+cloud "MongoDB Atlas" as atlas_platform #4CAF50 {
+  database "Primary Cluster" as primary_db {
+    component [User Collection] as user_coll
+    component [Cases Collection] as cases_coll
+    component [GridFS Files] as gridfs_coll
+    component [Analysis Results] as results_coll
+  }
+}
+
+' === EXTERNAL SERVICES ===
+cloud "Google Cloud" as google_cloud #DB4437 {
+  component [Identity Provider] as google_auth
+  component [OAuth 2.0] as oauth_service
+}
+
+' === CONNECTIONS ===
+users --> edge : "HTTPS Requests"
+edge --> cdn : "Cache Static Assets"
+cdn --> react_app : "Serve React App"
+
+react_app --> express_server : "API Calls (HTTPS)"
+express_server --> flask_api : "ML Processing (HTTP)"
+
+auth_service --> google_auth : "OAuth Flow"
+upload_api --> primary_db : "Store Files"
+case_api --> primary_db : "Manage Cases"
+flask_api --> primary_db : "Store Results"
+
+' === DEPLOYMENT NOTES ===
+note top of vercel_platform
+  **Frontend Deployment**
+  • Automatic CI/CD from GitHub
+  • Edge locations worldwide
+  • Environment variables
+  • Custom domain support
+end note
+
+note top of railway_platform
+  **Backend Deployment**
+  • Docker containers
+  • Automatic scaling
+  • Environment variables
+  • Health checks
+end note
+
+note top of hf_platform
+  **ML Deployment**
+  • Python environment
+  • GPU acceleration
+  • Public API endpoint
+  • Model versioning
+end note
+
+note top of atlas_platform
+  **Database**
+  • Managed MongoDB
+  • Global clusters
+  • Automatic backups
+  • Security features
+end note
+
+' === SECURITY BOUNDARIES ===
+rectangle "Security Layer" as security #FFE0E0 {
+  component [HTTPS/TLS] as tls
+  component [JWT Tokens] as jwt
+  component [OAuth 2.0] as oauth
+  component [API Rate Limiting] as rate_limit
+}
+
+react_app ..> tls : "enforces"
+express_server ..> jwt : "validates"
+auth_service ..> oauth : "implements"
+express_server ..> rate_limit : "applies"
+
+@enduml 

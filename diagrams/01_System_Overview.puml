@@ -1,0 +1,89 @@
+@startuml System Overview
+
+!theme vibrant
+skinparam backgroundColor #FEFEFE
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+title SceneSolver - System Overview
+
+' === ACTORS ===
+actor "Law Enforcement" as user #lightblue
+actor "Forensic Analyst" as analyst #lightgreen
+
+' === EXTERNAL SYSTEMS ===
+cloud "Vercel Cloud" as vercel #4A90E2
+cloud "Railway Cloud" as railway #50C878  
+cloud "Hugging Face" as hf #FF6B35
+database "MongoDB Atlas" as db #4CAF50
+cloud "Google Identity" as google #DB4437
+
+' === MAIN SYSTEMS ===
+rectangle "SceneSolver Platform" {
+  
+  package "Frontend Layer" as frontend_layer #E3F2FD {
+    component [Web Application] as webapp #2196F3
+  }
+  
+  package "API Layer" as api_layer #E8F5E8 {
+    component [REST API Server] as api #4CAF50
+    component [Authentication Service] as auth #66BB6A
+  }
+  
+  package "AI/ML Layer" as ml_layer #FFF3E0 {
+    component [Crime Analysis Engine] as ml #FF9800
+    component [Evidence Detection] as evidence #FFB74D
+  }
+  
+  package "Data Layer" as data_layer #F3E5F5 {
+    component [File Storage Service] as storage #9C27B0
+    component [Case Management] as cases #BA68C8
+  }
+}
+
+' === CONNECTIONS ===
+user --> webapp : "Access Platform"
+analyst --> webapp : "Analyze Cases"
+
+webapp --> api : "HTTPS/REST"
+api --> auth : "Validate User"
+api --> ml : "Process Media"
+api --> storage : "Store Files"
+
+ml --> evidence : "Extract Evidence"
+storage --> cases : "Manage Cases"
+
+auth --> google : "OAuth 2.0"
+api --> db : "Persist Data"
+ml --> db : "Store Results"
+storage --> db : "File Metadata"
+
+' === DEPLOYMENTS ===
+webapp .up.> vercel : "deployed"
+api .up.> railway : "deployed"
+ml .up.> hf : "deployed"
+
+' === NOTES ===
+note top of webapp
+  **Frontend Technologies**
+  • React 19 + Vite
+  • TailwindCSS
+  • Framer Motion
+end note
+
+note top of api
+  **Backend Technologies**
+  • Node.js + Express
+  • JWT Authentication
+  • GridFS Storage
+end note
+
+note top of ml
+  **AI/ML Technologies**
+  • Flask + PyTorch
+  • OpenAI CLIP
+  • Vision Transformer
+end note
+
+@enduml 

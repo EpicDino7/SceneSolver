@@ -1,0 +1,168 @@
+@startuml Technology Stack
+
+!theme vibrant
+skinparam backgroundColor #FEFEFE
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+title SceneSolver - Technology Stack & Dependencies
+
+' === FRONTEND STACK ===
+package "Frontend Technologies" as frontend_stack #E3F2FD {
+  
+  frame "Core Framework" {
+    component [React 19] as react #61DAFB
+    component [Vite] as vite #646CFF
+    component [ES6 Modules] as es6 #F7DF1E
+  }
+  
+  frame "UI & Styling" {
+    component [TailwindCSS 4.0] as tailwind #06B6D4
+    component [Framer Motion] as framer #FF0055
+    component [Lucide Icons] as icons #F56565
+  }
+  
+  frame "State & Routing" {
+    component [React Router 7.2] as router #CA4245
+    component [Context API] as context #61DAFB
+    component [Axios] as axios #5A29E4
+  }
+  
+  frame "Additional Features" {
+    component [React Dropzone] as dropzone #00D084
+    component [html2pdf.js] as pdf #E53E3E
+    component [ESLint] as eslint #4B32C3
+  }
+}
+
+' === BACKEND STACK ===
+package "Backend Technologies" as backend_stack #E8F5E8 {
+  
+  frame "Runtime & Framework" {
+    component [Node.js 18+] as nodejs #339933
+    component [Express 4.21] as express #000000
+    component [ES6 Modules] as backend_es6 #F7DF1E
+  }
+  
+  frame "Authentication" {
+    component [Passport.js] as passport #34E27A
+    component [JWT] as jwt #000000
+    component [bcryptjs] as bcrypt #FF6B6B
+    component [Google OAuth 2.0] as oauth #4285F4
+  }
+  
+  frame "File Handling" {
+    component [Multer 1.4] as multer #FF6B6B
+    component [GridFS Storage] as gridfs #47A248
+    component [Express Session] as session #000000
+  }
+  
+  frame "Utilities" {
+    component [CORS] as cors #FF6B6B
+    component [dotenv] as dotenv #ECD53F
+    component [Nodemailer] as nodemailer #0F9D58
+  }
+}
+
+' === ML BACKEND STACK ===
+package "ML Technologies" as ml_stack #FFF3E0 {
+  
+  frame "ML Framework" {
+    component [PyTorch] as pytorch #EE4C2C
+    component [OpenAI CLIP] as clip #412991
+    component [Vision Transformer] as vit #FF6F00
+  }
+  
+  frame "Web Framework" {
+    component [Flask] as flask #000000
+    component [Flask-CORS] as flask_cors #000000
+    component [Gradio] as gradio #FF7C00
+  }
+  
+  frame "Data Processing" {
+    component [OpenCV] as opencv #5C3EE8
+    component [Pillow] as pillow #3776AB
+    component [NumPy] as numpy #013243
+    component [Pandas] as pandas #150458
+  }
+  
+  frame "AI Services" {
+    component [Gemini API] as gemini #4285F4
+    component [Hugging Face] as huggingface #FF9D00
+  }
+}
+
+' === DATABASE & CLOUD ===
+package "Database & Cloud" as cloud_stack #F3E5F5 {
+  
+  frame "Database" {
+    component [MongoDB Atlas] as mongodb #47A248
+    component [Mongoose ODM] as mongoose #880000
+    component [GridFS] as gridfs_db #47A248
+  }
+  
+  frame "Cloud Platforms" {
+    component [Vercel] as vercel_tech #000000
+    component [Railway] as railway_tech #0B0D0E
+    component [Hugging Face Spaces] as hf_tech #FF9D00
+  }
+  
+  frame "Development" {
+    component [Git/GitHub] as git #F05032
+    component [npm/Package Managers] as npm #CB3837
+    component [Environment Variables] as env #ECD53F
+  }
+}
+
+' === TECHNOLOGY RELATIONSHIPS ===
+react --> vite : "build tool"
+react --> tailwind : "styling"
+react --> framer : "animations"
+react --> router : "navigation"
+
+express --> nodejs : "runtime"
+express --> passport : "authentication"
+express --> multer : "file upload"
+express --> mongoose : "database"
+
+flask --> pytorch : "ML framework"
+pytorch --> clip : "vision model"
+pytorch --> vit : "transformer"
+flask --> gradio : "interface"
+
+mongodb --> mongoose : "ODM"
+mongodb --> gridfs_db : "file storage"
+
+' === DEPLOYMENT CONNECTIONS ===
+frontend_stack .up.> vercel_tech : "deployed on"
+backend_stack .up.> railway_tech : "deployed on"  
+ml_stack .up.> hf_tech : "deployed on"
+cloud_stack --> mongodb : "hosted on Atlas"
+
+' === VERSION INFO ===
+note bottom of frontend_stack
+  **Key Versions:**
+  • React: 19.0.0
+  • Vite: 6.2.6
+  • TailwindCSS: 4.0.7
+  • TypeScript: Ready
+end note
+
+note bottom of backend_stack
+  **Key Versions:**
+  • Node.js: ≥18.0.0
+  • Express: 4.21.2
+  • Mongoose: 8.15.0
+  • Multer: 1.4.2 (compatibility)
+end note
+
+note bottom of ml_stack
+  **Key Features:**
+  • GPU Acceleration
+  • Model Checkpoints
+  • Video Processing
+  • Real-time Analysis
+end note
+
+@enduml 

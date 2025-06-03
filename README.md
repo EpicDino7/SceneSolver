@@ -1,0 +1,2 @@
+﻿# SceneSolver
+SceneSolver is an AI-powered forensic platform that automates crime scene analysis using CLIP and Vision Transformers (ViT). The platform processes images to identify crime types, extract key visual evidence, and generate detailed crime scene summaries. By supporting batch processing, SceneSolver enhances the efficiency of forensic investigations, enabling professionals to analyze large amounts of visual data quickly and accurately.

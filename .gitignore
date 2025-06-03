@@ -1,0 +1,60 @@
+# Node.js dependencies
+frontend/node_modules/
+backend/node_modules/
+node_modules/
+package-lock.json
+
+# Python
+backendflask/venv/
+backendflask/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment files
+backend/.env
+backendflask/.env
+.env
+.env.local
+.env.production
+
+# Large AI model files (comment out if you want to include them)
+# backendflask/*.pth
+# backendflask/*.pt
+# backendflask/*.bin
+# backendflask/*.safetensors
+
+# Uploaded files and temporary data
+backendflask/uploads/
+backendflask/frames/
+backendflask/temp/
+uploads/
+frames/
+temp/
+
+# Logs
+*.log
+logs/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database files
+*.db
+*.sqlite3
+
+# Jupyter notebook
+.ipynb_checkpoints/
+
+# Build outputs
+build/
+dist/
+*.egg-info/

@@ -1,0 +1,119 @@
+@startuml SceneSolver Architecture
+
+!theme amiga
+title SceneSolver - AI Crime Scene Analysis Platform Architecture
+
+' External Services
+cloud "Vercel" as vercel #lightblue
+cloud "Railway" as railway #lightgreen  
+cloud "Hugging Face Spaces" as hf #orange
+database "MongoDB Atlas" as mongodb #green
+cloud "Google OAuth" as google #red
+
+' Main Components
+package "Frontend (React + Vite)" as frontend {
+  component "App.jsx" as app
+  component "Dashboard" as dashboard  
+  component "Upload" as upload
+  component "User" as user
+  component "Login" as login
+  component "Signup" as signup
+  component "About" as about
+  component "CaseSummary" as casesummary
+  component "Header" as header
+  component "AuthContext" as authcontext
+  component "OTPVerification" as otp
+}
+
+package "Backend (Node.js + Express)" as backend {
+  component "Express Server" as express
+  component "Auth Routes" as authroutes
+  component "Upload Routes" as uploadroutes  
+  component "Google Auth Routes" as gauthroutes
+  component "Passport Config" as passport
+  component "User Model" as usermodel
+  component "Google User Model" as gusermodel
+  component "GridFS Storage" as gridfs
+}
+
+package "Backend Flask (ML)" as backendflask {
+  component "Flask API" as flask
+  component "Crime Pipeline" as pipeline
+  component "CLIP Model" as clip
+  component "ViT Model" as vit
+  component "Evidence Extractor" as evidence
+  component "Frame Processor" as frames
+  component "Gradio Interface" as gradio
+}
+
+' Component Relationships - Frontend Internal
+app --> dashboard
+app --> upload  
+app --> user
+app --> login
+app --> signup
+app --> about
+app --> casesummary
+app --> header
+app --> authcontext
+login --> otp
+signup --> otp
+authcontext --> login
+authcontext --> signup
+
+' Frontend to Backend Connections
+frontend --> backend : "HTTPS API Calls\n(Authentication, File Upload)"
+authcontext --> authroutes : "Login/Signup/JWT"
+upload --> uploadroutes : "File Upload + Metadata"
+user --> uploadroutes : "Case Management"
+login --> gauthroutes : "Google OAuth"
+signup --> gauthroutes : "Google OAuth"
+
+' Frontend to Flask ML Backend
+upload --> flask : "ML Processing\n(Crime Scene Analysis)"
+user --> flask : "Case Analysis Results"
+
+' Backend Internal Relationships
+express --> authroutes
+express --> uploadroutes
+express --> gauthroutes
+authroutes --> usermodel
+gauthroutes --> gusermodel
+authroutes --> passport
+uploadroutes --> gridfs
+passport --> google : "OAuth 2.0"
+
+' Backend to Database
+usermodel --> mongodb : "User Data"
+gusermodel --> mongodb : "Google User Data"
+gridfs --> mongodb : "File Storage (GridFS)"
+uploadroutes --> mongodb : "Case Metadata"
+
+' Flask ML Internal Relationships
+flask --> pipeline
+pipeline --> clip
+pipeline --> vit
+pipeline --> evidence
+pipeline --> frames
+flask --> gradio : "UI Interface"
+
+' Flask to Database
+flask --> mongodb : "Analysis Results"
+
+' External Service Deployments
+frontend ..> vercel : "Deployed on"
+backend ..> railway : "Deployed on"
+backendflask ..> hf : "Deployed on"
+
+' Data Flow Annotations
+note right of upload : "1. User uploads crime scene\nimages/videos"
+note right of pipeline : "2. ML models analyze\ncrime type & evidence"  
+note right of mongodb : "3. Results stored\nwith case metadata"
+note right of user : "4. User views analysis\nresults & reports"
+
+' Technology Stack Notes
+note bottom of frontend : "React 19, Vite, TailwindCSS\nFramer Motion, React Router"
+note bottom of backend : "Node.js, Express, Passport\nMulter, GridFS, JWT"
+note bottom of backendflask : "Flask, PyTorch, OpenAI CLIP\nVision Transformer, Gradio"
+
+@enduml 
