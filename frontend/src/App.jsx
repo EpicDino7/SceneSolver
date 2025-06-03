@@ -12,7 +12,7 @@ import Dashboard from "./Dashboard";
 import Login from "./Login";
 import Signup from "./Signup";
 import Upload from "./Upload";
-import User from "./User"; // Import the User component
+import User from "./User.jsx"; // Import the User component with explicit extension
 import About from "./about"; // Import the About component
 import CaseSummary from "./CaseSummary";
 
