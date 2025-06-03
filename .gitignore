@@ -58,3 +58,6 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+
+# Separate repositories (deployed independently)
+SceneSolverModels/
