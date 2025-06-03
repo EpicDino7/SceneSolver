@@ -5,6 +5,9 @@ import Guser from "../models/Guser.js";
 
 const router = express.Router();
 
+// Get frontend URL from environment or default to localhost for development
+const FRONTEND_URL = process.env.FRONTEND_URL;
+
 const logRequest = (req, res, next) => {
   console.log("Request path:", req.path);
   console.log("Session:", req.session);
@@ -22,7 +25,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login",
+    failureRedirect: `${FRONTEND_URL}/login`,
     session: false,
   }),
   (req, res) => {
@@ -30,10 +33,10 @@ router.get(
       const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, {
         expiresIn: "24h",
       });
-      res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
+      res.redirect(`${FRONTEND_URL}/auth/callback?token=${token}`);
     } catch (error) {
       console.error("Callback error:", error);
-      res.redirect("http://localhost:5173/login");
+      res.redirect(`${FRONTEND_URL}/login`);
     }
   }
 );
