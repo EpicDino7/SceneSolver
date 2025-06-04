@@ -139,26 +139,46 @@ export default function Upload() {
     setActiveTab("Process");
 
     try {
-      const inferenceForm = new FormData();
-      inferenceForm.append("caseName", caseName);
-      inferenceForm.append("location", location);
-      inferenceForm.append("date", date);
-      inferenceForm.append("crimeTime", crimeTime);
-      files.forEach((file) => inferenceForm.append("files", file));
-      inferenceForm.append("email", user.email);
+      // Convert files to base64 format that HF Space expects
+      const fileData = await Promise.all(
+        files.map(async (file) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve({
+                name: file.name,
+                data: reader.result, // This will be data:image/jpeg;base64,... format
+                size: file.size,
+                type: file.type,
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        })
+      );
 
+      // Call HF Space API with correct endpoint and format
       const inferenceRes = await axios.post(
-        `${HF_SPACE_URL}/upload`,
-        inferenceForm,
+        `${HF_SPACE_URL}/call/analyze_crime_scene_api`,
+        {
+          data: [JSON.stringify(fileData)], // HF Space expects data array with JSON string
+        },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
 
-      const caseResult = inferenceRes.data.result;
+      // Parse the result from HF Space
+      let caseResult;
+      if (inferenceRes.data && inferenceRes.data.data) {
+        caseResult = JSON.parse(inferenceRes.data.data[0]);
+      } else {
+        throw new Error("Invalid response from analysis service");
+      }
 
+      // Now send to backend for storage and Gemini report
       const finalFormData = new FormData();
       finalFormData.append("caseName", caseName);
       finalFormData.append("location", location);
