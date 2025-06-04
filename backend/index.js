@@ -27,7 +27,7 @@ const allowedOrigins = [
   "https://scenesolver-backend-2wb1.onrender.com", // Current Render backend URL
   "https://scenesolver.vercel.app", // Vercel frontend URL
   "https://scene-solver.vercel.app", // Alternative Vercel URL
-  process.env.FRONTEND_URL, // Dynamic frontend URL from environment
+  process.env.FRONTEND_URL,
 ].filter(Boolean);
 
 app.use(
