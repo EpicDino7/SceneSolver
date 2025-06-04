@@ -159,7 +159,7 @@ export default function Upload() {
 
       // Call HF Space API with correct endpoint and format
       const inferenceRes = await axios.post(
-        `${HF_SPACE_URL}/call/analyze_crime_scene_api`,
+        `${HF_SPACE_URL}/call/analyze_crime_scene_ui`,
         {
           data: [JSON.stringify(fileData)], // HF Space expects data array with JSON string
         },
