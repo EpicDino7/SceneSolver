@@ -21,6 +21,7 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://scenesolver-backend-2wb1.onrender.com"
+    "VITE_API_URL": "https://scenesolver-backend-2wb1.onrender.com",
+    "VITE_HF_SPACE_URL": "https://epicdino-scenesolvermodels.hf.space"
   }
 }

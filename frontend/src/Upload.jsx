@@ -19,6 +19,9 @@ import cs8 from "./assets/cs8.jpeg";
 
 // API URL configuration
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const HF_SPACE_URL =
+  import.meta.env.VITE_HF_SPACE_URL ||
+  "https://epicdino-scenesolvermodels.hf.space";
 
 const images = [crimeSceneImg, cs1, cs2, cs3, cs4, cs5, cs6, cs7, cs8];
 
@@ -145,7 +148,7 @@ export default function Upload() {
       inferenceForm.append("email", user.email);
 
       const inferenceRes = await axios.post(
-        "http://127.0.0.1:5000/upload",
+        `${HF_SPACE_URL}/upload`,
         inferenceForm,
         {
           headers: {
